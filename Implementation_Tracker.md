@@ -18,25 +18,25 @@ Resume point for every session. Read this first; update after every meaningful c
 - [x] Created `UPSTREAM.md` (pinned commit `0281737`, known conflict: BlackHole vs SCK)
 - [x] Created `docs/open-questions.md` (Q1–Q4)
 - [x] Created `docs/spec/` (phase 0–5 specs written in prior session)
-- [x] Created `.github/workflows/ci.yml` (lint gate: rustfmt + clippy + eslint on push/PR)
-- [x] Updated `CLAUDE.md` with build commands, file map, Meetily conventions, and BlackHole conflict note
+- [x] Created `.github/workflows/ci.yml` (lint gate: rustfmt + clippy + eslint on push/PR; added cmake install for macOS)
+- [x] Updated `CLAUDE.md` (build commands corrected to `cd frontend/`; file map; Meetily conventions; BlackHole conflict note)
 - [x] Created `docs/meetily-reference.md` (upstream internals detail)
+- [x] Ran `cargo fmt` on entire workspace (112 files; upstream had no fmt enforcement)
+- [x] Fixed 2 clippy warnings in `build/ffmpeg.rs` (unused import; `last()` → `next_back()`)
 
 ## In progress
 
-- [ ] Commit and push `our-baseline` branch to fork
+- [ ] Manual smoke test (macOS Apple Silicon)
 
 ## Next step
 
-1. Commit all Phase 0 additions and push to `mohamedishak440/meetily` on `our-baseline`.
-2. **Manual smoke test (must do on macOS Apple Silicon):**
-   - Install deps: follow `docs/BUILDING.md`
-   - Run `./clean_run.sh`
-   - Record 30 seconds of audio → verify transcript appears → verify Ollama summary generates
-   - If BlackHole appears as a requirement, confirm whether `core_audio.rs` already uses SCK process-tap or still needs a virtual device; update `UPSTREAM.md` accordingly
-3. **CI gate:** verify `ci.yml` goes green on the pushed branch (lint only — no binary build in CI).
-4. **Tag** the passing commit as `v0-baseline`.
-5. Update this tracker: Phase 0 → done; Phase 1 → in progress.
+1. **Manual smoke test (macOS Apple Silicon):**
+   - `cd frontend && pnpm install && pnpm run tauri:dev`
+   - Record 30 seconds → verify transcript appears → verify Ollama summary generates
+   - Confirm `core_audio.rs` uses SCK process-tap, not BlackHole; update `UPSTREAM.md` build notes
+2. **CI gate:** verify `ci.yml` goes green on GitHub Actions.
+3. **Tag** passing commit as `v0-baseline`.
+4. Update tracker: Phase 0 → done; Phase 1 → in progress.
 
 ---
 
@@ -45,9 +45,10 @@ Resume point for every session. Read this first; update after every meaningful c
 | Area | Decision | Why |
 |---|---|---|
 | BlackHole / macOS audio | Flagged in UPSTREAM.md as a known conflict. SCK path appears to exist in v0.4.0; needs smoke-test confirmation. Phase 1 (G6/G7) will replace any virtual-driver path with SCK process-tap. | CLAUDE.md constraint: no virtual driver |
-| CI workflows | Added `ci.yml` (lint/check on PR). Kept Meetily's existing `build-macos.yml` / `build-windows.yml` (release/`workflow_dispatch` only) unchanged. | Full binary builds are too slow for PR gates |
-| CLAUDE.md | Replaced Meetily's 17KB CLAUDE.md. Extracted useful content to `docs/meetily-reference.md`. | Our project instructions must take precedence |
+| CI workflows | Added `ci.yml` (lint/check on PR + `brew install cmake`). Kept Meetily's existing `build-macos.yml` / `build-windows.yml` (release/`workflow_dispatch` only) unchanged. | Full binary builds are too slow for PR gates; cmake needed for whisper-rs-sys/llama-cpp |
+| CLAUDE.md | Replaced Meetily's 17KB CLAUDE.md. Extracted useful content to `docs/meetily-reference.md`. Build paths corrected to `cd frontend/`. | Our project instructions must take precedence |
 | Branch name | `our-baseline` (not `main`). Our `main` maps to upstream `main`. `our-baseline` is where Phase 0–4 work lands. | Keeps upstream `main` clean for cherry-picks |
+| cargo fmt on whole workspace | Ran `cargo fmt` across 112 files. Noted in UPSTREAM.md. | CI gate requires passing `fmt --check`; upstream does not enforce fmt |
 
 ---
 

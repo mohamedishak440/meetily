@@ -45,18 +45,21 @@ If it conflicts with the specs, the specs win — fix the tracker.
 ## Build commands
 
 ```bash
-# macOS — from repo root
+# All scripts live in frontend/ — run from there
+cd frontend
+
+# macOS
 ./clean_run.sh              # clean build + run (info logging)
 ./clean_run.sh debug        # with debug logging
 ./clean_build.sh            # production build
 
-# Windows — from repo root
+# Windows
 clean_run_windows.bat
 clean_build_windows.bat
 
-# Manual (from frontend/)
+# Or manually (from frontend/)
 pnpm install
-pnpm run tauri:dev          # dev mode
+pnpm run tauri:dev          # dev mode (auto-detects GPU)
 pnpm run tauri:build        # production build
 
 # GPU variants

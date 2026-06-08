@@ -20,9 +20,21 @@ When upstream releases a new version, diff each listed area against the new tag 
 
 ---
 
-## Phase 0 — no divergences yet
+## Phase 0 divergences
 
-No product code has been changed. The sections below will be filled in as phases 1–4 progress.
+### Codebase-wide rustfmt pass
+
+- **Upstream state at pin:** 112 files did not pass `cargo fmt --check` (upstream does not enforce fmt).
+- **Our divergence:** Ran `cargo fmt` on the entire workspace to make CI lint gate green.
+- **Merge risk:** low (formatting only; applies cleanly on merge)
+- **Last synced:** 2026-06-08
+
+### ffmpeg.rs clippy fixes
+
+- **Upstream state at pin:** `frontend/src-tauri/build/ffmpeg.rs` had 2 clippy warnings: unused `std::io::Read` import; `Iterator::last` on a `DoubleEndedIterator`.
+- **Our divergence:** Removed unused import; changed `.last()` → `.next_back()`.
+- **Merge risk:** low (build script only)
+- **Last synced:** 2026-06-08
 
 ---
 
