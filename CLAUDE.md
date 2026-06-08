@@ -94,6 +94,7 @@ RUST_LOG=app_lib::audio=debug ./clean_run.sh   # audio module only
 - **Pluggable behind interfaces.** New STT/LLM/TTS = implement `STTProvider`/`LLMProvider`/`TTSProvider` + registry entry. No core changes, no hard-coded SDK calls on a path.
 - **Additive DB migrations** (add tables/columns; don't alter Meetily's) → stays mergeable upstream. Each migration gets a forward test on a populated DB.
 - **Fork discipline.** Keep engine modules close to upstream; isolate new work; log every divergence in `UPSTREAM.md`.
+- **Never run `cargo fmt` on upstream Rust files.** Upstream does not enforce rustfmt; reformatting 100+ files creates noise diffs and merge conflicts. Only format files you authored. CI does not run `cargo fmt --check`. If a linter/IDE offers to format-on-save, disable it for `frontend/src-tauri/src/` and `llama-helper/`.
 - **Source tags are first-class.** Every transcript segment carries `source` = `local` (mic) / `remote` (loopback). Don't drop or merge.
 - **Cost tracked.** Cloud jobs estimate `tokens × price` first; record `tokens_in/out`, `cost_estimate`; respect `budget_cap` / `spent_this_month`.
 - **Style:** existing repo linters (rustfmt + clippy, eslint/prettier). Match surrounding code; don't reformat untouched files.
